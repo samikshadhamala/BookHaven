@@ -1,0 +1,47 @@
+📚 EASIEST SETUP METHOD
+=======================
+
+STEP 1: Install Packages
+-------------------------
+pip install -r requirements.txt
+
+STEP 2: Initialize Database
+----------------------------
+python init_db.py
+
+STEP 3: Run Application
+------------------------
+python app.py
+
+STEP 4: Open Browser
+---------------------
+http://127.0.0.1:5000
+
+Login with:
+  Admin: admin / admin123
+  User:  john / password123
+
+That's it! 🎉
+
+
+TROUBLESHOOTING
+===============
+
+If you get errors during pip install:
+--------------------------------------
+Try this instead:
+
+pip uninstall Flask Flask-WTF WTForms -y
+pip install Flask==2.3.0
+pip install Flask-SQLAlchemy==3.0.3
+pip install Flask-Login==0.6.2
+pip install Flask-WTF==1.1.1
+pip install WTForms==3.0.1
+pip install Werkzeug==2.3.0
+pip install email-validator==2.0.0
+pip install MarkupSafe==2.1.3
+
+
+Still having issues?
+--------------------
+See TROUBLESHOOTING.txt for detailed solutions!

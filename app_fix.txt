@@ -1,0 +1,11 @@
+
+NOTE: The app.py has been configured to automatically create the database
+on first run. You don't need to run flask init-db commands.
+
+Just run: python app.py
+
+And the database will be created automatically!
+
+Then register an account or use:
+Admin: admin / admin123
+User: john / password123

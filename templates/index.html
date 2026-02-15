@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Home - BookHaven Online Bookstore{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 animate-slide-up">
+                <h1 class="hero-title">Discover Your Next Great Read</h1>
+                <p class="hero-subtitle">Explore thousands of books across all genres. Your literary journey starts here!</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('books') }}" class="btn btn-hero btn-primary">
+                        <i class="fas fa-book"></i> Browse Books
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn btn-hero btn-outline">
+                        <i class="fas fa-user-plus"></i> Join Now
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="hero-stats mt-4">
+                    <div class="stat-item">
+                        <i class="fas fa-book"></i>
+                        <div>
+                            <strong>1000+</strong>
+                            <span>Books</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>500+</strong>
+                            <span>Readers</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <div>
+                            <strong>4.8</strong>
+                            <span>Rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center animate-fade-in">
+                <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=600&h=600&fit=crop" alt="Books" class="hero-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">
+            <span>Browse by Category</span>
+        </h2>
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Fiction') }}" class="category-card">
+                    <i class="fas fa-book-open"></i>
+                    <h4>Fiction</h4>
+                    <p>Novels & Stories</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Technology') }}" class="category-card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h4>Technology</h4>
+                    <p>Programming & IT</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Self-Help') }}" class="category-card">
+                    <i class="fas fa-heart"></i>
+                    <h4>Self-Help</h4>
+                    <p>Personal Growth</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='History') }}" class="category-card">
+                    <i class="fas fa-landmark"></i>
+                    <h4>History</h4>
+                    <p>Historical Books</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Science') }}" class="category-card">
+                    <i class="fas fa-atom"></i>
+                    <h4>Science</h4>
+                    <p>Scientific Research</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Business') }}" class="category-card">
+                    <i class="fas fa-briefcase"></i>
+                    <h4>Business</h4>
+                    <p>Management & Finance</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Children') }}" class="category-card">
+                    <i class="fas fa-child"></i>
+                    <h4>Children</h4>
+                    <p>Kids Books</p>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <a href="{{ url_for('books', category='Biography') }}" class="category-card">
+                    <i class="fas fa-user-circle"></i>
+                    <h4>Biography</h4>
+                    <p>Life Stories</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Books Section -->
+<section class="featured-section py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">
+            <span>Featured Books</span>
+        </h2>
+        <div class="row g-4">
+            {% for book in featured_books %}
+            <div class="col-lg-3 col-md-4 col-sm-6 animate-fade-in">
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="{{ url_for('static', filename='images/book_covers/' + book.cover_image) }}" 
+                             alt="{{ book.title }}"
+                             onerror="this.src='https://via.placeholder.com/300x400?text={{ book.title[:20] }}'">
+                        {% if book.rating >= 4.5 %}
+                        <span class="book-badge">Bestseller</span>
+                        {% endif %}
+                    </div>
+                    <div class="book-content">
+                        <h5 class="book-title">{{ book.title }}</h5>
+                        <p class="book-author">by {{ book.author }}</p>
+                        <div class="book-rating">
+                            {% for i in range(5) %}
+                                {% if i < book.rating %}
+                                <i class="fas fa-star"></i>
+                                {% else %}
+                                <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>({{ book.rating }})</span>
+                        </div>
+                        <div class="book-footer">
+                            <span class="book-price">NPR {{ book.price }}</span>
+                            <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-sm btn-view">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('books') }}" class="btn btn-primary btn-lg">
+                View All Books <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Books Section -->
+<section class="latest-section py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">
+            <span>Latest Arrivals</span>
+        </h2>
+        <div class="row g-4">
+            {% for book in latest_books[:4] %}
+            <div class="col-lg-3 col-md-6 animate-fade-in">
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="{{ url_for('static', filename='images/book_covers/' + book.cover_image) }}" 
+                             alt="{{ book.title }}"
+                             onerror="this.src='https://via.placeholder.com/300x400?text={{ book.title[:20] }}'">
+                        <span class="book-badge new">New</span>
+                    </div>
+                    <div class="book-content">
+                        <h5 class="book-title">{{ book.title }}</h5>
+                        <p class="book-author">by {{ book.author }}</p>
+                        <div class="book-rating">
+                            {% for i in range(5) %}
+                                {% if i < book.rating %}
+                                <i class="fas fa-star"></i>
+                                {% else %}
+                                <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>({{ book.rating }})</span>
+                        </div>
+                        <div class="book-footer">
+                            <span class="book-price">NPR {{ book.price }}</span>
+                            <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-sm btn-view">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="feature-box">
+                    <i class="fas fa-shipping-fast feature-icon"></i>
+                    <h4>Fast Delivery</h4>
+                    <p>Get your books delivered quickly and safely to your doorstep</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="feature-box">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h4>Secure Payment</h4>
+                    <p>Your payment information is safe and secure with us</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="feature-box">
+                    <i class="fas fa-headset feature-icon"></i>
+                    <h4>24/7 Support</h4>
+                    <p>Our customer support team is always here to help you</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

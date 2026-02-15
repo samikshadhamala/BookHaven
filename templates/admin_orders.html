@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Manage Orders - Admin{% endblock %}
+{% block content %}
+<div class="admin-orders-page py-5">
+    <div class="container-fluid">
+        <h1 class="page-title mb-4"><i class="fas fa-shopping-cart"></i> Manage Orders</h1>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark"><tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for order in orders.items %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.customer.username }}</td>
+                        <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>NPR {{ order.total_amount }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}" class="d-inline">
+                                <select name="status" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+                                    <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td><a href="{{ url_for('order_confirmation', order_id=order.id) }}" class="btn btn-sm btn-info">View</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

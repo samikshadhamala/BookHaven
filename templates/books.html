@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Browse Books - BookHaven{% endblock %}
+{% block content %}
+<div class="books-page">
+    <div class="container py-5">
+        <h1 class="page-title text-center mb-4">Browse Our Collection</h1>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="filter-sidebar">
+                    <h5><i class="fas fa-filter"></i> Filters</h5>
+                    <form method="GET" action="{{ url_for('books') }}">
+                        <div class="mb-3">
+                            <input type="text" name="query" class="form-control" placeholder="Search books..." value="{{ search_query }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat[0] }}" {% if category_filter == cat[0] %}selected{% endif %}>{{ cat[0] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sort By</label>
+                            <select name="sort" class="form-select">
+                                <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title (A-Z)</option>
+                                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Highest Rated</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row g-4">
+                    {% for book in books %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="book-card">
+                            <div class="book-image">
+                                <img src="{{ url_for('static', filename='images/book_covers/' + book.cover_image) }}" alt="{{ book.title }}" onerror="this.src='https://via.placeholder.com/300x400?text=Book'">
+                                {% if not book.is_in_stock() %}
+                                <span class="book-badge out-of-stock">Out of Stock</span>
+                                {% endif %}
+                            </div>
+                            <div class="book-content">
+                                <h5 class="book-title">{{ book.title }}</h5>
+                                <p class="book-author">by {{ book.author }}</p>
+                                <div class="book-rating">
+                                    {% for i in range(5) %}
+                                    {% if i < book.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}
+                                    {% endfor %}
+                                    <span>({{ book.rating }})</span>
+                                </div>
+                                <div class="book-footer">
+                                    <span class="book-price">NPR {{ book.price }}</span>
+                                    <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-sm btn-view">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-book-open fa-4x text-muted mb-3"></i>
+                        <h3>No books found</h3>
+                        <p>Try adjusting your filters</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if pagination.pages > 1 %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if pagination.has_prev %}
+                        <li class="page-item"><a class="page-link" href="?page={{ pagination.prev_num }}&query={{ search_query }}&category={{ category_filter }}&sort={{ sort_by }}">Previous</a></li>
+                        {% endif %}
+                        {% for page_num in pagination.iter_pages() %}
+                        {% if page_num %}
+                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page_num }}&query={{ search_query }}&category={{ category_filter }}&sort={{ sort_by }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if pagination.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ pagination.next_num }}&query={{ search_query }}&category={{ category_filter }}&sort={{ sort_by }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

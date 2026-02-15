@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Shopping Cart - BookHaven{% endblock %}
+{% block content %}
+<div class="cart-page py-5">
+    <div class="container">
+        <h1 class="page-title mb-4"><i class="fas fa-shopping-cart"></i> Shopping Cart</h1>
+        {% if cart_items %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="cart-items">
+                    {% for item in cart_items %}
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="{{ url_for('static', filename='images/book_covers/' + item.book.cover_image) }}" alt="{{ item.book.title }}" onerror="this.src='https://via.placeholder.com/150x200'">
+                            </div>
+                            <div class="col-md-4">
+                                <h5>{{ item.book.title }}</h5>
+                                <p class="text-muted">by {{ item.book.author }}</p>
+                            </div>
+                            <div class="col-md-2">
+                                <p class="mb-0"><strong>NPR {{ item.book.price }}</strong></p>
+                            </div>
+                            <div class="col-md-2">
+                                <form method="POST" action="{{ url_for('update_cart', book_id=item.book.id) }}" class="d-flex">
+                                    <input type="number" name="quantity" class="form-control form-control-sm" value="{{ item.quantity }}" min="1" max="{{ item.book.stock_quantity }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary ms-1"><i class="fas fa-sync"></i></button>
+                                </form>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <p class="mb-2"><strong>NPR {{ item.subtotal }}</strong></p>
+                                <a href="{{ url_for('remove_from_cart', book_id=item.book.id) }}" class="text-danger"><i class="fas fa-trash"></i> Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cart-summary">
+                    <h4>Order Summary</h4>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <strong>NPR {{ total }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <strong>Free</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total:</strong>
+                        <h4 class="text-primary">NPR {{ total }}</h4>
+                    </div>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('checkout') }}" class="btn btn-primary btn-lg w-100">Proceed to Checkout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg w-100">Login to Checkout</a>
+                    {% endif %}
+                    <a href="{{ url_for('books') }}" class="btn btn-outline-secondary w-100 mt-2">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-5x text-muted mb-3"></i>
+            <h3>Your cart is empty</h3>
+            <p>Start shopping to add items to your cart</p>
+            <a href="{{ url_for('books') }}" class="btn btn-primary btn-lg">Browse Books</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

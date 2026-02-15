@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} - BookHaven{% endblock %}
+{% block content %}
+<div class="book-detail-page py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="book-detail-image">
+                    <img src="{{ url_for('static', filename='images/book_covers/' + book.cover_image) }}" alt="{{ book.title }}" onerror="this.src='https://via.placeholder.com/400x600?text={{ book.title[:15] }}'">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h1 class="book-detail-title">{{ book.title }}</h1>
+                <p class="book-detail-author">by {{ book.author }}</p>
+                <div class="book-rating mb-3">
+                    {% for i in range(5) %}{% if i < book.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}
+                    <span class="ms-2">({{ book.rating }} / 5.0)</span>
+                </div>
+                <div class="book-meta">
+                    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+                    <p><strong>Category:</strong> <span class="badge bg-primary">{{ book.category }}</span></p>
+                    <p><strong>Publisher:</strong> {{ book.publisher or 'N/A' }}</p>
+                    <p><strong>Year:</strong> {{ book.publication_year or 'N/A' }}</p>
+                    <p><strong>Pages:</strong> {{ book.pages or 'N/A' }}</p>
+                    <p><strong>Language:</strong> {{ book.language }}</p>
+                </div>
+                <div class="price-section my-4">
+                    <h2 class="book-price">NPR {{ book.price }}</h2>
+                    <p class="stock-status {% if book.is_in_stock() %}in-stock{% else %}out-of-stock{% endif %}">
+                        <i class="fas fa-circle"></i> {% if book.is_in_stock() %}In Stock ({{ book.stock_quantity }} available){% else %}Out of Stock{% endif %}
+                    </p>
+                </div>
+                {% if book.is_in_stock() %}
+                <form method="POST" action="{{ url_for('add_to_cart', book_id=book.id) }}" class="add-to-cart-form">
+                    <div class="row g-2 mb-3">
+                        <div class="col-auto">
+                            <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ book.stock_quantity }}" style="width: 100px;">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+                <div class="book-description mt-4">
+                    <h4>Description</h4>
+                    <p>{{ book.description or 'No description available.' }}</p>
+                </div>
+            </div>
+        </div>
+        {% if related_books %}
+        <div class="related-books mt-5">
+            <h3 class="mb-4">Related Books</h3>
+            <div class="row g-4">
+                {% for rbook in related_books %}
+                <div class="col-lg-3 col-md-6">
+                    <div class="book-card">
+                        <div class="book-image">
+                            <img src="{{ url_for('static', filename='images/book_covers/' + rbook.cover_image) }}" alt="{{ rbook.title }}" onerror="this.src='https://via.placeholder.com/300x400'">
+                        </div>
+                        <div class="book-content">
+                            <h5 class="book-title">{{ rbook.title }}</h5>
+                            <p class="book-author">by {{ rbook.author }}</p>
+                            <div class="book-footer">
+                                <span class="book-price">NPR {{ rbook.price }}</span>
+                                <a href="{{ url_for('book_detail', book_id=rbook.id) }}" class="btn btn-sm btn-view">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

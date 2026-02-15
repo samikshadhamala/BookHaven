@@ -1,0 +1,68 @@
+📚 BOOKHAVEN - MANUAL SETUP INSTRUCTIONS
+========================================
+
+STEP 1: Install Python
+-----------------------
+Make sure you have Python 3.8 or higher installed.
+Check by running: python --version
+
+STEP 2: Open Terminal/Command Prompt
+------------------------------------
+Navigate to the bookstore folder:
+cd path/to/bookstore
+
+STEP 3: Create Virtual Environment (Recommended)
+------------------------------------------------
+Windows:
+  python -m venv venv
+  venv\Scripts\activate
+
+Mac/Linux:
+  python3 -m venv venv
+  source venv/bin/activate
+
+STEP 4: Install Dependencies
+----------------------------
+pip install -r requirements.txt
+
+STEP 5: Initialize Database
+---------------------------
+flask --app app init-db
+
+STEP 6: Seed Sample Data (Optional)
+-----------------------------------
+flask --app app seed-db
+
+STEP 7: Run the Application
+---------------------------
+python app.py
+
+STEP 8: Access the Website
+--------------------------
+Open your browser and go to:
+http://127.0.0.1:5000
+
+DEFAULT LOGIN CREDENTIALS
+==========================
+Admin:
+  Username: admin
+  Password: admin123
+
+User:
+  Username: john
+  Password: password123
+
+TROUBLESHOOTING
+===============
+1. If you get "Module not found":
+   pip install -r requirements.txt
+
+2. If you get "Database not found":
+   flask --app app init-db
+   flask --app app seed-db
+
+3. If port 5000 is in use:
+   Change the port in app.py (last line):
+   app.run(debug=True, port=5001)
+
+That's it! Enjoy your BookHaven Online Bookstore! 📚✨

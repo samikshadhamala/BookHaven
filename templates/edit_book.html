@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Edit Book - Admin{% endblock %}
+{% block content %}
+<div class="edit-book-page py-5">
+    <div class="container">
+        <h1 class="page-title mb-4"><i class="fas fa-edit"></i> Edit Book</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-card">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">{{ form.title.label(class="form-label") }}{{ form.title(class="form-control") }}</div>
+                            <div class="col-md-6 mb-3">{{ form.author.label(class="form-label") }}{{ form.author(class="form-control") }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">{{ form.isbn.label(class="form-label") }}{{ form.isbn(class="form-control") }}</div>
+                            <div class="col-md-6 mb-3">{{ form.category.label(class="form-label") }}{{ form.category(class="form-select") }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">{{ form.price.label(class="form-label") }}{{ form.price(class="form-control") }}</div>
+                            <div class="col-md-6 mb-3">{{ form.stock_quantity.label(class="form-label") }}{{ form.stock_quantity(class="form-control") }}</div>
+                        </div>
+                        <div class="mb-3">{{ form.description.label(class="form-label") }}{{ form.description(class="form-control", rows=4) }}</div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">{{ form.publisher.label(class="form-label") }}{{ form.publisher(class="form-control") }}</div>
+                            <div class="col-md-4 mb-3">{{ form.publication_year.label(class="form-label") }}{{ form.publication_year(class="form-control") }}</div>
+                            <div class="col-md-4 mb-3">{{ form.pages.label(class="form-label") }}{{ form.pages(class="form-control") }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">{{ form.language.label(class="form-label") }}{{ form.language(class="form-control") }}</div>
+                            <div class="col-md-6 mb-3">{{ form.rating.label(class="form-label") }}{{ form.rating(class="form-control") }}</div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.cover_image.label(class="form-label") }}
+                            {{ form.cover_image(class="form-control") }}
+                            <small class="text-muted">Current: {{ book.cover_image }}</small>
+                        </div>
+                        <div class="d-grid">{{ form.submit(class="btn btn-primary btn-lg") }}</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
